@@ -1,0 +1,29 @@
+name: Validar Archivo TXT
+
+on:
+  push:
+    branches:
+      - main # Se ejecuta solo cuando haces un push en la rama 'main'
+
+jobs:
+  validar-archivo:
+    runs-on: ubuntu-latest # El sistema operativo donde correrá el workflow
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4 # Descarga el código del repositorio
+
+      - name: Leer y validar el archivo
+        run: |
+          if [ ! -f "archivo.txt" ]; then
+            echo "Error: archivo.txt no existe en el repositorio."
+            exit 1
+          fi
+
+          contenido=$(cat archivo.txt)
+          if [[ $contenido =~ ^[0-9]+$ ]]; then
+            echo "El archivo contiene solo números. Todo correcto."
+          else
+            echo "Error: El archivo contiene caracteres no numéricos."
+            exit 1
+          fi
